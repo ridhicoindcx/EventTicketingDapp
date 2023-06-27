@@ -1,0 +1,371 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+#top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#logo {
+  display: flex;
+  align-items: center;
+}
+
+#logo img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+#menu {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+#menu li {
+  margin-right: 20px;
+}
+
+#menu li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+h1 {
+  margin-top: 0;
+  color: #333;
+}
+
+.hidden {
+  display: none;
+}
+
+#login-screen,
+#home-screen,
+#booking-screen,
+#confirmation-screen,
+#admin-screen,
+#home-artist-screen {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 80vh; /* Set a maximum height for the screens */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+#login-form,
+#booking-form {
+  text-align: left;
+}
+
+#login-form label,
+#booking-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+#login-form input,
+#booking-form input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+#login-btn,
+#book-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+#login-btn:hover,
+#book-btn:hover {
+  background-color: #45a049;
+}
+
+#confirmation-message {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  color: #fff;
+}
+
+#confirmation-message.success {
+  background-color: #4CAF50;
+}
+
+#redirect-message {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Add the following styles for event cards */
+
+.event-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.event-card p {
+  color: #777;
+}
+.event-card .event-card-details {
+  margin-top: 10px;
+}
+
+.event-card .event-detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* .event-card .event-detail .event-detail-key {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.event-card .event-detail .event-detail-value {
+  color: #777;
+} */
+
+.event-detail-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.event-detail-key {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333;
+}
+
+.event-detail-value {
+  color: #777;
+}
+.event-details-header {
+  color: #777;
+  text-align: left;
+}
+
+
+
+/* Adjust the styles for the event list container */
+
+#event-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Add styles for greeting and hello message */
+
+#greeting {
+  margin-top: 30px;
+}
+
+#salutation {
+  font-size: 24px;
+  color: #555;
+}
+
+#hello-message {
+  font-size: 18px;
+  color: #777;
+}
+
+/* Add the following CSS styles at the end of the styles.css file */
+
+#home-artist-screen #content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* height: 70vh;  */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#home-artist-screen h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+#home-artist-screen #event-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#home-artist-screen #new-event-btn,
+#home-artist-screen #cancel-event-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-top: 20px;
+}
+
+#home-artist-screen #new-event-btn:hover {
+  background-color: #45a049;
+}
+
+
+
+/* #home-artist-screen #new-event-form {
+  margin-top: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
+
+#home-artist-screen #new-event-form.hidden {
+  display: none;
+}
+
+
+
+#login-form,
+#booking-form {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+.popup-form {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dimmed background */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-form-content {
+  position: relative;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px; /* Set a fixed width for the form */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add a box shadow */
+  margin: auto;
+  margin-top: auto;
+  top: 50%; /* Position the form 50% from the top */
+  transform: translateY(-50%); /* Adjust the vertical position */
+}
+
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #888;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+/* Add more styles to the form fields as per your requirement */
+#event-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#event-form input[type="text"],
+#event-form input[type="date"],
+#event-form textarea {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+#event-form button[type="submit"] {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#event-form button[type="submit"]:hover {
+  background-color: #45a049;
+}
