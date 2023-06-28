@@ -1,12 +1,755 @@
 // Sample event data
+const { ethers } = require('ethers');
+const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545'); // Replace with your Ethereum node URL
 
+const SystemcontractABI = [
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Bought",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "eventId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "eventName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxSeats",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ticketPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timeDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "artist",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "eventDescription",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "artistAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "payment",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Sold",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "eventId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "numTickets",
+        "type": "uint256"
+      }
+    ],
+    "name": "TicketPurchased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "eventId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "numTickets",
+        "type": "uint256"
+      }
+    ],
+    "name": "TicketTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_numTickets",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_seatNumber",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "bookSeats",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "buyToken",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelEvent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "completeEvent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_eventName",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxSeats",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ticketPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "slot",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_artist",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_eventDescription",
+        "type": "string"
+      }
+    ],
+    "name": "createEvent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_eventName",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxSeats",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ticketPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "slot",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_artist",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_eventDescription",
+        "type": "string"
+      }
+    ],
+    "name": "createEvent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "events",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "eventName",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxSeats",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "availableSeats",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "slot",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "artist",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "eventDescription",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "cancelled",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "completed",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "eventsMetadata",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "artistAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bookingPayment",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collectedAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAvailableSeats",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getDateTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getEventDetails",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEventList",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "eventId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "eventName",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxSeats",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableSeats",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timeDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "slot",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "artist",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "eventDescription",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "cancelled",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "completed",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool[]",
+            "name": "seatMap",
+            "type": "bool[]"
+          }
+        ],
+        "internalType": "struct EventManager.Event[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTicketPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "addedValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseAllowance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "markCancel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "markCompleted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_numTickets",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_seatNumber",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "purchaseTickets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "sellToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "system",
+    "outputs": [
+      {
+        "internalType": "contract Ticket",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token",
+    "outputs": [
+      {
+        "internalType": "contract TicketToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_numTickets",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_askedPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferTickets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+const SystemAddress = '0x1234573...';
+
+
+const EventManager = new ethers.Contract(EventManagerAddress, contract1ABI, provider);
+const System = new ethers.Contract(SystemAddress, contract2ABI, provider);
+const Ticket = new ethers.Contract(TicketAddress, contract2ABI, provider);
+const TicketToken = new ethers.Contract(TicketTokenAddress, contract2ABI, provider);
+const TokenManager = new ethers.Contract(TokenManagerAddress, contract2ABI, provider);
+
+// fetch all events --> getEventList
 function getEvents() {
   // Mocking the list of events
   events = [
-    { id: 1, name: 'Event 1', date: '2023-06-25' },
-    { id: 2, name: 'Event 2', date: '2023-06-26' },
-    { id: 3, name: 'Event 3', date: '2023-06-27' },
-    {id:4, name:'Movie: abcd2sasasa', date: '2023-06-30', random:'somerandomdata'}
+    { id: 1, name: 'Jazbaa ft Pankaj Udas Live', date: '2023-06-25',description: 'In Ghazal, there is no barrier, mine or yours, old or new. It belongs to all and connects Hearts and Souls', ticketsavailable: true , ticketPrice: 100},
+    { id: 2, name: 'Comedy Show by Uday', date: '2023-06-26' ,  ticketsavailable: true , ticketPrice: 130 ,description: 'His razor-sharp wit will cut deep in your weekly blues'},
+    { id: 3, name: 'Event 3', date: '2023-06-27' , description: 'Concert by Atif', ticketPrice: 70 },
+    {id:4, name:'Movie: abcd2sasasa', date: '2023-06-30', description: 'A movie by Stephen',random:'somerandomdata' , ticketPrice: 120}
   ];
 
   return events;
@@ -25,7 +768,7 @@ function validateEmail(email) {
   return user ? user : null;
 }
 
-// Function to generate event cards
+// Function to generate event cards -->getEventDetails
 function generateEventCards() {
   const eventList = document.getElementById('event-list');
   eventList.innerHTML = '';
@@ -33,23 +776,54 @@ function generateEventCards() {
   // global events ;
   const events = getEvents(); // Retrieve the list of events
   events.forEach(event => {
+
+    const maincard = document.createElement('div');
+    maincard.className = 'event-card';
+    maincard.dataset.eventId = event.id;
+
     const card = document.createElement('div');
-    card.className = 'event-card';
+    card.className = 'header-section';
     card.dataset.eventId = event.id;
 
     const name = document.createElement('h3');
     name.innerText = event.name;
     card.appendChild(name);
 
+    const description = document.createElement('p');
+    description.innerText = event.description;
+    card.appendChild(description);
+    card.addEventListener('click', function(){ toggleVisibility(maincard)});
+    const details = document.createElement('div');
+    details.className = 'event-details hidden';
+
     const date = document.createElement('p');
     date.innerText = event.date;
-    card.appendChild(date);
-
-    eventList.appendChild(card);
+    details.appendChild(date);
+    const price = document.createElement('p');
+    price.innerText = "Ticket Price (ETH) : "+event.ticketPrice;
+    details.appendChild(price);
+    const newbutton = document.createElement('button');
+    if (event.ticketsavailable){
+      newbutton.setAttribute('id','cancel-event-btn');
+      newbutton.className = 'hidden';
+      newbutton.textContent = "Book tickets";
+      newbutton.addEventListener('click', function(){ openBookingScreen(event.id)});
+    }else{
+      newbutton.setAttribute('id','cancel-event-btn');
+      newbutton.className = 'hidden';
+      newbutton.textContent = "Sold Out! Check Resale tickets";
+      newbutton.style.backgroundColor = "red";
+      newbutton.addEventListener('click', function(){ openScalpingScreen(event.id)});
+    }
+    details.appendChild(newbutton);
+    maincard.appendChild(card)
+    maincard.appendChild(details);
+    eventList.appendChild(maincard);
+    
   });
 
   // Add event listener to the event list container
-  eventList.addEventListener('click', handleEventClick);
+  //eventList.addEventListener('click', handleEventClick);
 }
 
 // Event listener for event card click
@@ -61,12 +835,17 @@ function handleEventClick(event) {
   }
 }
 
-// Function to open the booking screen
+// Function to open the booking screen 
 function openBookingScreen(eventId) {
   const event = getEvents().find(event => event.id === Number(eventId));
   
   document.getElementById('event-name').innerText = event.name;
   document.getElementById('event-date').innerText = event.date;
+
+  console.log(event.id);
+  document.getElementById('event-id').value = event.id;
+  document.getElementById('ticket_price').value = event.ticketPrice;
+  document.getElementById('price').textContent = event.ticketPrice
 
   // Get email from login form and pre-fill in booking form
   const email = document.getElementById('email').value;
@@ -77,7 +856,7 @@ function openBookingScreen(eventId) {
   document.getElementById('booking-screen').style.display = 'block';
 }
 
-// Function to handle booking tickets
+// Function to handle booking tickets --> purchaseTickets 
 function bookTicket(event) {
   event.preventDefault();
 
@@ -190,28 +969,34 @@ logoutButtons.forEach(button => {
   });
 });
 
+// Artist events--?> get eventlist filter by artist id
 function myEvents(){
   const eventData = [
     {
-      name: "Event 1",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      name: "Jazbaa ft Pankaj Udas Live",
+      eventId: 1232,
+      description: "In Ghazal, there is no barrier, mine or yours, old or new. It belongs to all and connects Hearts and Souls"
     },
     {
-      name: "Event 2",
-      description: "Snished do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      name: "Comedy Show by Uday",
+      eventId: 2132,
+      description: "His razor-sharp wit will cut deep in your weekly blues"
     },
     {
-      name: "Event 3",
-      description: "incididunt ut labore et dolore magna aliqua."
+      name: "Movie: Name",
+      eventId: 1111,
+      description: "A movie by Stephen"
     }]
   return eventData;
 }
 
+//get event details--> getEventDetails filter by eventID
 function eventSummary(eventId){
   const detailsData = [
-    { key: 'abc:', value: 'detail1' },
-    { key: 'xyz:', value: 'detail2' },
-    { key: 'pqrs:', value: 'detail3' }
+    { key: 'EventID', value: eventId },
+    { key: 'Date', value: '06 July 2023' },
+    { key: 'Price', value: '130' },
+    { key: 'Total Collection', value: '12300' }
     ];
   console.log("Fetched details for eventId"+ eventId);
   return detailsData;
@@ -273,7 +1058,7 @@ function createEventCards() {
       newbutton.setAttribute('id','cancel-event-btn');
       newbutton.className = 'hidden';
       newbutton.textContent = "Cancel this event";
-      newbutton.addEventListener('click', cancelevent);
+      newbutton.addEventListener('click', function(){ cancelevent(event.eventId)});
     card.appendChild(newbutton);
 
     
@@ -288,9 +1073,15 @@ function toggleVisibility(element) {
   element.querySelector("#cancel-event-btn").classList.toggle('hidden');
 }
 
-function cancelevent(){
-  console.log("Clicked button")
+//for cancelling event -> cancelEvent
+
+function cancelevent(eventid){
+  abc = confirm("This event will be cancelled and all advance payments will be refunded. Please note that you will be charged 100"+" ETH as a cancellation fee.")
+  if (abc){
+    console.log("Clicked button for event: " + eventid )
+  }
 }
+
 // Generate event cards on page load
 generateEventCards();
 
@@ -301,7 +1092,93 @@ function show_new_event_form(){
 function close_event_form() {
   document.getElementById('new-event-form').style.display = 'none';
 }
-function submit_new_event(){
+
+function openScalpingScreen(eventId){
+  const element = document.getElementById('scalping-popup-data');
+  element.innerHTML = '';
+  fetchScalpingData(eventId)
+    .then(data => {
+      // Generate HTML cards for each user offering pre-owned tickets
+      data.forEach(ticket => {
+        const card = createScalpingCard(ticket);
+        element.appendChild(card);
+      });
+    });
+ 
+  document.getElementById('scalping-popup').style.display = 'block';
+}
+function fetchScalpingData(eventId) {
+  // Mocked data for demonstration purposes
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const data = [
+        {
+          owner: 'John Doe',
+          walletId: '0x1234567890',
+          numTickets: 2,
+          offerPrice: 50.00
+        },
+        {
+          owner: 'Jane Smith',
+          walletId: '0x0987654321',
+          numTickets: 1,
+          offerPrice: 30.00
+        },
+        {
+          owner: 'Jane Smith',
+          walletId: '0x0987654321',
+          numTickets: 1,
+          offerPrice: 30.00
+        },
+        {
+          owner: 'Jane Smith',
+          walletId: '0x0987654321',
+          numTickets: 1,
+          offerPrice: 30.00
+        },
+        // Add more ticket objects as needed
+      ];
+      resolve(data);
+    }, 1000);
+  });
+}
+function createScalpingCard(ticket) {
+  const card = document.createElement('div');
+  card.classList.add('scalping-card');
+  const ownerName = document.createElement('p');
+  ownerName.innerText = `Owner: ${ticket.owner}`;
+  card.appendChild(ownerName);
+  const walletId = document.createElement('p');
+  walletId.innerText = `Wallet ID: ${ticket.walletId}`;
+  card.appendChild(walletId);
+  const numTickets = document.createElement('p');
+  numTickets.innerText = `Number of Tickets: ${ticket.numTickets}`;
+  card.appendChild(numTickets);
+  const offerPrice = document.createElement('p');
+  offerPrice.innerText = `Offer Price: $${ticket.offerPrice.toFixed(2)}`;
+  card.appendChild(offerPrice);
+  const buyButton = document.createElement('button');
+  buyButton.innerText = 'Buy';
+  buyButton.classList.add('buy-button');
+  buyButton.addEventListener('click', () => {
+    buyTicket(ticket);
+  });
+  card.appendChild(buyButton);
+  return card;
+}
+function buyTicket(ticket) {
+  // Logic to handle the purchase of the pre-owned ticket
+  console.log('Buying ticket:', ticket);
+}
+
+function close_scalping_option(){
+  document.getElementById('scalping-popup').style.display = 'none';
+}
+
+//Create new event handler--function createEvent(string memory ...)
+
+function submit_new_event(event){
+  event.preventDefault();
   var form = document.getElementById('event-form');
 
   // Collect form data
@@ -328,5 +1205,109 @@ function submit_new_event(){
   //   }
   // };
   alert("Form submitted");
+  const newEventForm = document.getElementById('new-event-form');
+  newEventForm.style.display = 'none';
   // xhr.send(JSON.stringify(eventData));
+}
+function view_my_tickets(){
+const email = document.getElementById('email').value;
+const user = validateEmail(email);
+const { name, walletId } = user;
+tickets = fetchbookedtickets(walletId);
+const tickets_screen = document.getElementById('mytickets-screen');
+// Hide booking screen and show confirmation screen
+document.getElementById('home-screen').style.display = 'none';
+document.getElementById('mytickets-screen').style.display = 'block';
+const ticketList = document.getElementById('ticket-list');
+// Clear existing tickets
+ticketList.innerHTML = '';
+tickets.forEach(ticket => {
+  const ticketElement = document.createElement('div');
+  ticketElement.classList.add('ticket');
+  const ticketid = document.createElement('div');
+  ticketid.classList.add('ticket-id');
+  ticketid.style.writingMode = "tb-rl";
+  ticketid.style.transform = "rotate(-180deg)";
+  ticketid.textContent = "# "+ticket.id;
+  const ticketInfo = document.createElement('div');
+  ticketInfo.classList.add('ticket-info');
+  const eventName = document.createElement('div');
+  eventName.classList.add('event-name');
+  eventName.textContent = ticket.Eventname;
+  ticketInfo.appendChild(eventName);
+  const eventDate = document.createElement('div');
+  eventDate.classList.add('event-date');
+  eventDate.textContent = ticket.date;
+  ticketInfo.appendChild(eventDate);
+  const tktid = document.createElement('div');
+  tktid.classList.add('seat-no');
+  tktid.textContent = "Seat: "+ticket.seatno;
+  ticketInfo.appendChild(tktid);
+  const sellButton = document.createElement('button');
+  sellButton.innerText = 'ReSell';
+  sellButton.classList.add('buy-button');
+  sellButton.style.marginTop="40px";
+  sellButton.addEventListener('click', () => {
+    sellTicket(ticket);
+  });
+  ticketInfo.appendChild(sellButton);
+  const ticketImageContainer = document.createElement('div');
+  ticketImageContainer.classList.add('ticket-image');
+  const ticketImage = document.createElement('img');
+  ticketImage.src = '../img/ticket-image.jpg'; // Replace with the actual path to the ticket image
+  ticketImage.alt = 'Ticket Image';
+  ticketImageContainer.appendChild(ticketImage);
+  const ticketQRContainer = document.createElement('div');
+  ticketQRContainer.classList.add('ticket-image');
+  const ticketQRImage = document.createElement('img');
+  ticketQRImage.src = 'img/ticket-qr-image.png'; // Replace with the actual path to the ticket image
+  ticketQRImage.alt = 'Ticket QR';
+  ticketQRContainer.appendChild(ticketQRImage);
+  ticketElement.appendChild(ticketid);
+  ticketElement.appendChild(ticketInfo);
+  ticketElement.appendChild(ticketQRContainer);
+  ticketElement.appendChild(ticketImageContainer);
+  
+  ticketList.appendChild(ticketElement);
+});
+}
+function gotohomescreen(){
+
+document.getElementById('mytickets-screen').style.display = 'none';
+document.getElementById('home-screen').style.display = 'block';
+}
+function fetchbookedtickets(walletId){
+tickets = [
+  { id: 2647892, Eventname: 'Event 1', date: '2023-06-25', description: 'Description of event' , seatno: 1023 },
+  { id: 238732, Eventname: 'Event 2', date: '2023-06-26' , seatno: 10 },
+  { id: 33298120, Eventname: 'Event 3', date: '2023-06-27', seatno: 57 },
+  {id:4328297, Eventname:'Movie: abcd2sasasa', date: '2023-06-30', random:'somerandomdata', seatno: 28}
+];
+return tickets;
+}
+function ticketcountvalidator(e){
+const el = e.target || e
+tp = document.getElementById('ticket_price').value;
+
+if(el.type == "number" && el.max && el.min ){
+  let value = parseInt(el.value)
+  el.value = value // for 000 like input cleanup to 0
+  let max = parseInt(el.max)
+  let min = parseInt(el.min)
+  if ( value > max ) el.value = el.max
+  if ( value < min ) el.value = el.min
+}
+for (let i = el.min; i<=el.max; i++){
+  if (i <= parseInt(el.value)){
+    document.getElementById('seat_id_'+i+'_label').style.display="block";
+    document.getElementById('seat_id_'+i).style.display="block";
+    document.getElementById('seat_id_'+i).required = true;
+    document.getElementById('price').textContent = tp * el.value;
+  }else{
+    document.getElementById('seat_id_'+i+'_label').style.display="none";
+    document.getElementById('seat_id_'+i).style.display="none";
+    document.getElementById('seat_id_'+i).required = false;
+    
+  }
+}
 }
