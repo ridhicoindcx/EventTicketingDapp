@@ -8,7 +8,7 @@
     <header>
         <nav id="top-nav">
           <div id="logo">
-            <img src="logo.png" alt="Event Ticketing Platform Logo">
+            <img src="../img/logo.png" alt="Event Ticketing Platform Logo">
             <h1>Event Ticketing Platform</h1>
           </div>
           <ul id="menu">
@@ -36,6 +36,20 @@
   <div id="home-screen" class="hidden">
     <h1>Upcoming Events</h1>
     <div id="event-list"></div>
+    <button id="my-tickets-btn" onclick="view_my_tickets()">View My Tickets</button>
+    <div id="scalping-popup" class="popup-form hidden">
+      <!-- Add the form fields for hosting a new event here -->
+      <div class="popup-form-content"> <h2>Available Pre-owned Tickets!</h2>
+        <button id="close-scalping-btn" class="close-btn" onclick="close_scalping_option()">&times;</button>
+        <div class="scalping-popup-data" id="scalping-popup-data">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="mytickets-screen" class="hidden">
+    <h1>My Tickets</h1>
+    <div id="ticket-list"></div>
+    <button id="home-screen" onclick="gotohomescreen()">Check new Events</button>
   </div>
 
   <div id="booking-screen" class="hidden">
@@ -51,9 +65,26 @@
       <label for="email">Email:</label>
       <input type="email" id="booking-email" readonly>
       <label for="wallet-id">Wallet ID:</label>
-    <input type="text" id="wallet-id" readonly>
+      <input type="text" id="wallet-id" readonly>
+      <label for="event-id">Event Id:</label>
+      <input type="text" id="event-id" readonly>
+      <input type="text" id="ticket_price" readonly hidden>
+      <label for="num_tickets">Number of tickets:</label>
+      <input type="number" id="num_tickets" min="1" max="5" value="1" oninput="ticketcountvalidator(this)" required>
+      <label for="seat_id_1" id="seat_id_1_label">Seat Number:</label>
+      <input type="text" id="seat_id_1" required>
+      <label for="seat_id_2" id="seat_id_2_label" style="display: none;">Seat Number for ticket 2:</label>
+      <input type="text" id="seat_id_2"  style="display: none;">
+      <label for="seat_id_3" id="seat_id_3_label" style="display: none;">Seat Number for ticket 3:</label>
+      <input type="text" id="seat_id_3" style="display: none;">
+      <label for="seat_id_4" id="seat_id_4_label" style="display: none;">Seat Number for ticket 4:</label>
+      <input type="text" id="seat_id_4" style="display: none;">
+      <label for="seat_id_5" id="seat_id_5_label" style="display: none;">Seat Number for ticket 5:</label>
+      <input type="text" id="seat_id_5" style="display: none;">
 
       <button type="submit" id="book-btn">Book</button>
+      <span for="price_label" id="price_label">Final Price: </span>
+      <span for="price" id="price"></span>
     </form>
   </div>
 
@@ -90,7 +121,7 @@
         <div class="popup-form-content">
           <button id="close-event-form-btn" class="close-btn" onclick="close_event_form()">&times;</button>
           <h2>Host a New Event</h2>
-          <form id="event-form" onsubmit="submit_new_event()">
+          <form id="event-form" onsubmit="return submit_new_event(event)">
             <!-- Sample form fields -->
             <label for="event-name">Event Name:</label>
             <input type="text" id="event-name" name="event-name" required>
@@ -100,13 +131,19 @@
             
             <label for="event-description">Event Description:</label>
             <textarea id="event-description" name="event-description" required></textarea>
+            <label for="event-seats">Max Capacity:</label>
+            <input type="number" id="event-seats" name="event-seats" required>
+            <label for="event-price">Ticket Price:</label>
+            <input type="number" id="event-price" name="event-price" required>
+            <label for="event-seats">Slot:</label>
+            <input type="number" id="event-slot" name="event-slot" required><br>
             
             <button type="submit">Create Event</button>
           </form>
         </div>
       </div>
-  
-
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
